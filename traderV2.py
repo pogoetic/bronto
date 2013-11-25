@@ -1,14 +1,20 @@
 from MtgoxClass import Mtgox
-import json, time, decimal as D
+import json, time, decimal as D, sqllite3 as sdb
 from pprint import pprint
 
 gox = Mtgox() #create instance of mtgox obj
+
+conn = sdb.connect('/tempdb/test.db') #create connection object
+my_cursor = conn.cursor() #get cursor object
+my_cursor.execute('SELECT SQLITE_VERSION()') #exec query
+sqlite_data = my_cursor.fetchone() #fetch data
+print "SQLite version: %s" % sqlite_data
 
 
 
 #Ticker
 r = gox.auth('BTCUSD/money/ticker',{})
-print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
+#print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
 j = r.json()
 #print j['data'].keys() #get members of dict branch
 print time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(D.Decimal(j['data']['now'])/1000000)) 
@@ -20,7 +26,6 @@ print 'low: ' + j['data']['low']['value']
 print 'vol: ' + j['data']['vol']['value']
 print 'vwap: ' + j['data']['vwap']['value']
 print ''
-print 'End of Test'
 '''
 
 #Account / Wallet Info
