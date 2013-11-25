@@ -8,7 +8,7 @@ gox = Mtgox() #create instance of mtgox obj
 
 #Ticker
 r = gox.auth('BTCUSD/money/ticker',{})
-#print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
+print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
 j = r.json()
 #print j['data'].keys() #get members of dict branch
 print time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(D.Decimal(j['data']['now'])/1000000)) 
