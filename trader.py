@@ -4,19 +4,13 @@ from pprint import pprint
 
 gox = Mtgox() #create instance of mtgox obj
 
-conn = sdb.connect('db/test.db') #create connection object
-my_cursor = conn.cursor() #get cursor object
-#my_cursor.execute('SELECT * from gox_ticker') #exec query
-#sqlite_data = my_cursor.fetchone() #fetch data
-
-
 #Ticker
 r = gox.auth('BTCUSD/money/ticker',{})
 #print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
 j = r.json()
 #print j['data'].keys() #get members of dict branch
 
-tick_date = time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(D.Decimal(j['data']['now'])/1000000)) 
+tick_date = str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(D.Decimal(j['data']['now'])/1000000)))
 tick_avg = j['data']['avg']['value']
 tick_buy = j['data']['buy']['value']
 tick_sell = j['data']['sell']['value']
@@ -35,12 +29,25 @@ print 'vol:  %s', tick_vol
 print 'vwap: %s', tick_vwap
 print ''
 
-my_cursor.execute('insert into gox_ticker values (?,?,?,?,?,?,?,?)', 
-				 (tick_date,tick_avg,tick_buy,tick_sell,tick_high,tick_low,tick_vol,tick_vwap))
 
-my_cursor.execute('SELECT * from gox_ticker')
-sqlite_data = my_cursor.fetchall()
-pprint(sqlite_data)
+#SQLITE
+path = 'db/test.db'
+stmnt = 'select * from gox_ticker'
+#stmnt = 'insert into gox_ticker values(?,?,?,?,?,?,?,?,?)'
+#data = [None,tick_date,tick_avg,tick_buy,tick_sell,tick_high,tick_low,tick_vol,tick_vwap]
+
+conn = sdb.connect(path)
+with conn:
+	cur = conn.cursor()    
+	#cur.execute(stmnt,data)
+	cur.execute(stmnt)
+	rows = cur.fetchall()
+
+for row in rows:
+	pprint(row)
+
+
+
 
 '''
 
