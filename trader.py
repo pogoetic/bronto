@@ -60,7 +60,7 @@ while ((end-start)/60/60) < 8:
 
 	time.sleep(15) #give us a gap between API calls
 
-	if time.time() > 1385471461.15: #approx 8 hours from 1385442661.15
+	if time.time() > 1385471461.15: #approx 8 hours from 1385442661.15   (28,800 seconds more)
 		break
 
 '''
