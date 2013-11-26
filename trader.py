@@ -3,51 +3,65 @@ import json, time, decimal as D, sqlite3 as sdb
 from pprint import pprint
 
 gox = Mtgox() #create instance of mtgox obj
+start = time.time()
+end = time.time()
 
-#Ticker
-r = gox.auth('BTCUSD/money/ticker',{})
-#print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
-j = r.json()
-#print j['data'].keys() #get members of dict branch
+while ((end-start)/60/60) < 8:
 
-tick_date = str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(D.Decimal(j['data']['now'])/1000000)))
-tick_avg = j['data']['avg']['value']
-tick_buy = j['data']['buy']['value']
-tick_sell = j['data']['sell']['value']
-tick_high = j['data']['high']['value']
-tick_low = j['data']['low']['value']
-tick_vol = j['data']['vol']['value']
-tick_vwap = j['data']['vwap']['value']
+	#Ticker
+	r = gox.auth('BTCUSD/money/ticker',{})
+	#print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
+	j = r.json()
+	#print j['data'].keys() #get members of dict branch
 
-print tick_date
-print 'avg:  %s', tick_avg 
-print 'buy:  %s', tick_buy
-print 'sell: %s', tick_sell
-print 'high: %s', tick_high
-print 'low:  %s', tick_low
-print 'vol:  %s', tick_vol
-print 'vwap: %s', tick_vwap
-print ''
+	tick_date = str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(D.Decimal(j['data']['now'])/1000000)))
+	tick_avg = j['data']['avg']['value']
+	tick_buy = j['data']['buy']['value']
+	tick_sell = j['data']['sell']['value']
+	tick_high = j['data']['high']['value']
+	tick_low = j['data']['low']['value']
+	tick_vol = j['data']['vol']['value']
+	tick_vwap = j['data']['vwap']['value']
 
+	'''
+	print tick_date
+	print 'avg:  %s', tick_avg 
+	print 'buy:  %s', tick_buy
+	print 'sell: %s', tick_sell
+	print 'high: %s', tick_high
+	print 'low:  %s', tick_low
+	print 'vol:  %s', tick_vol
+	print 'vwap: %s', tick_vwap
+	print ''
+	'''
 
-#SQLITE
-path = 'db/test.db'
-stmnt = 'select * from gox_ticker'
-#stmnt = 'insert into gox_ticker values(?,?,?,?,?,?,?,?,?)'
-#data = [None,tick_date,tick_avg,tick_buy,tick_sell,tick_high,tick_low,tick_vol,tick_vwap]
-
-conn = sdb.connect(path)
-with conn:
-	cur = conn.cursor()    
-	#cur.execute(stmnt,data)
-	cur.execute(stmnt)
-	rows = cur.fetchall()
-
-for row in rows:
-	pprint(row)
+	#SQLITE
+	path = 'db/test.db'
+	#stmnt = 'select * from gox_ticker'
+	stmnt = 'insert into gox_ticker values(?,?,?,?,?,?,?,?,?)'
+	data = [None,tick_date,tick_avg,tick_buy,tick_sell,tick_high,tick_low,tick_vol,tick_vwap]
 
 
+	conn = sdb.connect(path)
+	with conn:
+		cur = conn.cursor()    
+		cur.execute(stmnt,data)
+		#cur.execute(stmnt)
+		#rows = cur.fetchall()
 
+	cur.execute('Select max(rowid) from gox_ticker')	
+	maxrow = cur.fetchone()
+	print "row inserted", maxrow
+	#for row in rows:
+	#	pprint(row)
+
+	j=None
+	r=None
+
+	time.sleep(15) #give us a gap between API calls
+
+	if time.time() > 1385471461.15: #approx 8 hours from 1385442661.15
+		break
 
 '''
 
