@@ -42,6 +42,11 @@ class Mtgox:
 			           'Content-Type': 'application/x-www-form-urlencoded'}
 			r = requests.post(base+path, data=inp, headers=headers)
 			#print r.request.headers
+			
+			if r.status_code != requests.codes.ok:
+				print r.status_code
+				print r.headers
+				r.raise_for_status()  #Will throw a python error if POST fails
 
 		return r
 
@@ -51,7 +56,7 @@ class Mtgox:
 #!! REMEMBER !!
 #Bid refers to buying BTC using the auxiliary currency (e.g. USD)
 #Ask refers to selling BTC for the auxiliary currency
-
+#The minimum trade size to buy OR sell is 0.01 BTC
 
 
 

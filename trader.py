@@ -6,7 +6,10 @@ gox = Mtgox() #create instance of mtgox obj
 start = time.time()
 end = time.time()
 
-while ((end-start)/60/60) < 8:
+'''
+while ((end-start)/60) < 5: #run for 5 minutes
+
+	end = time.time()
 
 	#Ticker
 	r = gox.auth('BTCUSD/money/ticker',{})
@@ -23,17 +26,17 @@ while ((end-start)/60/60) < 8:
 	tick_vol = j['data']['vol']['value']
 	tick_vwap = j['data']['vwap']['value']
 
-	'''
-	print tick_date
-	print 'avg:  %s', tick_avg 
-	print 'buy:  %s', tick_buy
-	print 'sell: %s', tick_sell
-	print 'high: %s', tick_high
-	print 'low:  %s', tick_low
-	print 'vol:  %s', tick_vol
-	print 'vwap: %s', tick_vwap
-	print ''
-	'''
+	
+	#print tick_date
+	#print 'avg:  %s', tick_avg 
+	#print 'buy:  %s', tick_buy
+	#print 'sell: %s', tick_sell
+	#print 'high: %s', tick_high
+	#print 'low:  %s', tick_low
+	#print 'vol:  %s', tick_vol
+	#print 'vwap: %s', tick_vwap
+	#print ''
+	
 
 	#SQLITE
 	path = 'db/test.db'
@@ -60,9 +63,44 @@ while ((end-start)/60/60) < 8:
 
 	time.sleep(15) #give us a gap between API calls
 
-	if time.time() > 1385471461.15: #approx 8 hours from 1385442661.15   (28,800 seconds more)
-		break
+	#if time.time() > 1385471461.15: #approx 8 hours from 1385442661.15   (28,800 seconds more)
+	#	break
+'''
 
+#PUll in trade history of a currency pair
+
+
+path = 'db/test.db'
+stmnt = 'select max(date) from mtgoxUSD'
+conn = sdb.connect(path)
+with conn:
+	cur = conn.cursor()    
+	cur.execute(stmnt)
+	maxdate = cur.fetchone()
+
+time_since = maxdate[0]   #time_now - 30 #time in seconds
+#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
+time_since_gox = int(time_since * 1000000) 
+#print time_now
+#print time_since
+#print time_since_gox
+#print 'time now: ', str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(time_now)))
+print 'time since: ', str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(time_since)))
+
+r = gox.auth('BTCUSD/money/trades/fetch',{'since':str(time_since_gox)})
+#print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
+j = r.json()
+
+stmnt = 'insert into mtgoxUSD values(?,?,?,?,?,?,?,?,?,?,?)'
+x=0
+for item in j['data']:
+	#print item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']
+	data = [item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']]
+	with conn:
+		cur = conn.cursor()    
+		cur.execute(stmnt,data)
+	x+=1	
+	print 'data inserted! row: ',x
 '''
 
 #Account / Wallet Info
