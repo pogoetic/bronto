@@ -7,8 +7,8 @@ class Scraper:
 	def Scrape_gox_trades(self):
 
 		from MtgoxClass import Mtgox
-		import json, time, decimal as D, sqlite3 as sdb
-		
+		import json, time, decimal as D, sqlite3 as sdb, requests
+
 		gox = Mtgox() #create instance of mtgox obj
 
 		#PUll in trade history of a currency pair
@@ -27,9 +27,21 @@ class Scraper:
 		time_since_gox = int(time_since * 1000000) 
 		#print 'time since: ', str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(time_since)))
 
-		r = gox.auth('BTCUSD/money/trades/fetch',{'since':str(time_since_gox)})
-		#print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))
-		j = r.json()
+		j = None
+		i = 0
+		while j == None: #Keep retrying until server responds...
+			
+			r = gox.auth('BTCUSD/money/trades/fetch',{'since':str(time_since_gox)})
+				#TEST BAD REQUEST: r = requests.get('http://httpbin.org/status/404')
+				#print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))			
+			if r.status_code == requests.codes.ok:
+				j = r.json()
+				i = 0
+			elif i > 10:
+				r.raise_for_status()
+			else:
+				time.sleep(10) #sleep 10 seconds between retries
+				i = i + 1
 
 		stmnt = 'insert into mtgoxUSD values(?,?,?,?,?,?,?,?,?,?,?)'
 		x=0

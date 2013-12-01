@@ -23,7 +23,7 @@ while ((end-start)/60/60) < 5: #run for 5 hours
 		rows_added = scrape.Scrape_gox_trades() 
 		time.sleep(15) #give us a gap between API calls
 
-	time.sleep(200)
+	#time.sleep(200)
 	#Force stop the script after so many hours
-	if end > 1385572448: #approx 5.5 hours from 1385531332 (20,000 seconds more)
-		break
+	#if end > 1385572448: #approx 5.5 hours from 1385531332 (20,000 seconds more)
+	#	break
