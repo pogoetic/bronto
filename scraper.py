@@ -3,7 +3,7 @@ import time
 
 '''
 Pull in trade history of a currency pair, BTCUSD in this case
--Will only pull 1000 rows at a time, may need to loop through several times
+-Will only pull 1000 rows at a time because that is the MTGOX API limit, may need to loop through several times
 '''
 
 start = time.mktime(time.gmtime())  #MTGOX server is on UTC
