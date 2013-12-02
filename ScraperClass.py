@@ -50,7 +50,6 @@ class Scraper:
 				time.sleep(10) #sleep 10 seconds between retries
 				i = i + 1
 
-		stmnt = 'insert into mtgoxUSD values(?,?,?,?,?,?,?,?,?,?,?)'
 		x=0
 		for item in j['data']:
 				#print item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']
