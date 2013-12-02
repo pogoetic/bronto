@@ -28,7 +28,6 @@ class Scraper:
 				c = db.cursor()	
 				c.execute(stmnt)
 				maxdate = c.fetchone()
-				print maxdate
 
 		time_since = maxdate[0]   #time_now - 30 #time in seconds
 		#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
