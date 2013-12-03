@@ -57,7 +57,7 @@ class Scraper:
 
 			if data[5] <= time_since:
 				#prevent insertion of duplicates just in case Mtgox starts processing trades with duplicate TID's
-				print 'Duplicate TID Found - insert aborted'
+				print 'Duplicate TID Found - insert aborted ', data[5]
 			else:	
 				with db:
 					c = db.cursor()	
