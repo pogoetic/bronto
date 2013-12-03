@@ -61,7 +61,7 @@ class Scraper:
 			else:	
 				with db:
 					c = db.cursor()	
-					c.execute('insert into mtgoxUSD values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'NULL')',data)
+					c.execute('insert into mtgoxUSD values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,''NULL')',data)
 						#c.execute("""SELECT * FROM mtgoxUSD order by date desc LIMIT %s""",(limit,))
 
 				x+=1	
