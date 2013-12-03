@@ -65,7 +65,7 @@ class Scraper:
 						#c.execute("""SELECT * FROM mtgoxUSD order by date desc LIMIT %s""",(limit,))
 
 				x+=1	
-				print 'data inserted! row: %s  TID: %s',x,data[5]
+				print 'data inserted! row: %s  TID: %s' % (x,data[5])
 
 		return x
 
