@@ -29,8 +29,8 @@ class Mtgox:
 			#GET
 			get_data = urllib.urlencode(inp) 
 			r = requests.get(base+path,data=get_data)
-			data_string = json.dumps(r.json(), indent=2)
-		
+			#data_string = json.dumps(r.json(), indent=2)
+			print r.request.headers
 		else:
 			inp['tonce'] = str(int(time.time()*1e6)) #fill inp dict with tonce value
 			data = urllib.urlencode(inp) #URL Encode the tonce value
