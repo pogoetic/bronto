@@ -38,7 +38,7 @@ class Scraper:
 		i = 0
 		while j == None: #Keep retrying until server responds...
 			
-			r = gox.auth('BTCUSD/money/trades/fetch',{'since':str(time_since_gox)},get=True)
+			r = gox.auth('BTCUSD/money/trades/fetch',{'since':str(time_since_gox)})
 				#TEST BAD REQUEST: r = requests.get('http://httpbin.org/status/404')
 				#print json.dumps(r.json(), sort_keys = True, indent=4, separators=(',', ': '))			
 			if r.status_code == requests.codes.ok:
