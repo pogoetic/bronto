@@ -23,15 +23,15 @@ class Scraper:
 		dbase = 'coin'
 		db=MySQLdb.connect(host=host,user=user,passwd=pwd,db=dbase)
 
-		stmnt = 'select max(date) from mtgoxUSD'
+		stmnt = 'select max(tid) from mtgoxUSD'
 		with db:
 				c = db.cursor()	
 				c.execute(stmnt)
-				maxdate = c.fetchone()
+				maxtid = c.fetchone()
 
-		time_since = maxdate[0]   #time_now - 30 #time in seconds
+		time_since = maxtid[0]   #time_now - 30 #time in seconds
 		#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
-		time_since_gox = int(time_since * 1000000) 
+		time_since_gox = int(time_since) 
 		#print 'time since: ', str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(time_since)))
 
 		j = None
