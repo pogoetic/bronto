@@ -55,7 +55,7 @@ class Scraper:
 				#print item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']
 			data = [item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']]
 
-			if data[5] == time_since:
+			if data[5] <= time_since:
 				#prevent insertion of duplicates just in case Mtgox starts processing trades with duplicate TID's
 				print 'Duplicate TID Found - insert aborted'
 			else:	
