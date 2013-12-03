@@ -55,13 +55,17 @@ class Scraper:
 				#print item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']
 			data = [item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']]
 
-			with db:
-				c = db.cursor()	
-				c.execute('insert into mtgoxUSD values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',data)
-					#c.execute("""SELECT * FROM mtgoxUSD order by date desc LIMIT %s""",(limit,))
+			if data[5] == time_since:
+				#prevent insertion of duplicates just in case Mtgox starts processing trades with duplicate TID's
+				print 'Duplicate TID Found - insert aborted'
+			else:	
+				with db:
+					c = db.cursor()	
+					c.execute('insert into mtgoxUSD values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',data)
+						#c.execute("""SELECT * FROM mtgoxUSD order by date desc LIMIT %s""",(limit,))
 
-			x+=1	
-			print 'data inserted! row: ',x
+				x+=1	
+				print 'data inserted! row: ',x
 
 		return x
 
