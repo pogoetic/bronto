@@ -27,7 +27,6 @@ class Mtgox:
 		
 		if get:
 			#GET
-			inp['tonce'] = str(int(time.time()*1e6))
 			get_data = urllib.urlencode(inp) 
 			r = requests.get(base+path,data=get_data)
 			#data_string = json.dumps(r.json(), indent=2)
