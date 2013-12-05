@@ -4,15 +4,15 @@ class Mtgox:
 
 	def __init__ (self):
 
-		#load our API public Key
-		fobj = open("publickey.txt")
-		self.key = str(fobj.read()) #warning - readlines() returns a List obj
+		#load our API Keys
+		fobj = open("key.txt")
+		key = fobj.readlines()
 		fobj.close()
 
-		#load our API private Key
-		fobj = open("privatekey.txt")
-		self.sec = str(fobj.read())
-		fobj.close()
+		key = map(lambda s: s.strip(), key)
+
+		self.key = key[0]
+		self.sec = key[1]
 
 	def __sign(self, path, data):
 		import hmac, base64, hashlib
