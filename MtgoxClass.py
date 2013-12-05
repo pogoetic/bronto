@@ -3,14 +3,12 @@
 class Mtgox:
 
 	def __init__ (self):
-
+		import ConfigParser
+		config = ConfigParser.ConfigParser()
+		config.read('config.cfg')
+		
 		#load our API Keys
-		fobj = open("key.txt")
-		key = fobj.readlines()
-		fobj.close()
-
-		key = map(lambda s: s.strip(), key) #strip the \n from the key
-
+		key=[config.get('mtgox','key'),config.get('mtgox','sec')]
 		self.key = key[0]
 		self.sec = key[1]
 

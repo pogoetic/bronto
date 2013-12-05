@@ -5,34 +5,30 @@ class Scraper:
 		gox = None
 
 	def Scrape_gox_trades(self):
-
+		#PUll in trade history of a currency pair
+		#Will only pull 1000 rows at a time
 		from MtgoxClass import Mtgox
 		import json, time, MySQLdb, requests, boto.ses, socket
+		import ConfigParser
+
+		config = ConfigParser.ConfigParser()
+		config.read('config.cfg')
 
 		gox = Mtgox() #create instance of mtgox obj
 
-		#PUll in trade history of a currency pair
-		#Will only pull 1000 rows at a time
+		#load our SES API public/private Key
+		key = [config.get('ses','key'),config.get('ses','secretkey')]
 
-		#load our SES API public Key
-		fobj = open("awsaccesskeys.txt")
-		key = fobj.readlines()
-		fobj.close()
-		key = map(lambda s: s.strip(), key) #strip the \n from the key
-		
 		#load mysql db credentials
-		fobj = open("dbpwd.txt")
-		pwd = str(fobj.read()) #warning - readlines() returns a List obj
-		fobj.close()
-		
 		hostname = socket.gethostname()
-		if hostname.find('ip-')>=0:   #IF we are on the server, use localhost. 
+		if hostname.find(config.get('mysql','remotehostname'))>=0:   #IF we are on the server, use localhost. 
 			host = 'localhost'
 		else:
-			host = 'ec2-54-235-27-19.compute-1.amazonaws.com' #If we are remote use the server name
-		user = 'ev'
-		dbase = 'coin'
-		db=MySQLdb.connect(host=host,user=user,passwd=pwd,db=dbase)
+			host = config.get('mysql','host') #If we are remote use the server name
+		dbuser = config.get('mysql','dbuser')
+		dbpwd = config.get('mysql','dbpwd')
+		dbname = config.get('mysql','dbname')
+		db=MySQLdb.connect(host=host,user=dbuser,passwd=dbpwd,db=dbname)
 
 		stmnt = 'select max(tid) from mtgoxUSD'
 		with db:
@@ -58,8 +54,11 @@ class Scraper:
 			elif i > 10:			
 				conn = boto.ses.connect_to_region('us-east-1',aws_access_key_id=key[0],aws_secret_access_key=key[1])
 				message = 'Server status code - %s\nServer Response Content - %s' % (r.status_code(),r.text)
-				conn.send_email('info@fitofpassion.com','MtGox Scraper ERROR',message,['pogster@gmail.com'])  
-				print 'sent error email'  
+				sender = config.get('ses','sender')
+				recip = config.get('ses','recipient')
+				subj = 'MtGox Scraper ERROR'
+				conn.send_email(sender,subj,message,[recip])  
+				print 'sent error email to %s' % (recip)  
 				r.raise_for_status()
 			else:
 				time.sleep(10) #sleep 10 seconds between retries
