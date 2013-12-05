@@ -9,7 +9,7 @@ class Mtgox:
 		key = fobj.readlines()
 		fobj.close()
 
-		key = map(lambda s: s.strip(), key)
+		key = map(lambda s: s.strip(), key) #strip the \n from the key
 
 		self.key = key[0]
 		self.sec = key[1]
