@@ -53,7 +53,7 @@ class Scraper:
 				i = 0
 			elif i > 10:			
 				conn = boto.ses.connect_to_region('us-east-1',aws_access_key_id=key[0],aws_secret_access_key=key[1])
-				message = 'Server status code - %s\nServer Response Content - %s' % (r.status_code(),r.text)
+				message = 'Server status code - %s\nServer Response Content - %s' % (r.status_code,r.text)
 				sender = config.get('ses','sender')
 				recip = config.get('ses','recipient')
 				subj = 'MtGox Scraper ERROR'

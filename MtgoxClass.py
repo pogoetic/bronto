@@ -42,7 +42,7 @@ class Mtgox:
 			
 			if r.status_code != requests.codes.ok:
 				print r.status_code
-				print r.headers
+				print r.text
 				#r.raise_for_status()  #Will throw a python error if POST fails
 
 		return r
