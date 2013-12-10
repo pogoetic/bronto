@@ -4,7 +4,7 @@ class Scraper:
 
 		gox = None
 
-	def Scrape_gox_trades(self):
+	def Scrape_gox_trades(self,tidoverride=None):
 		#PUll in trade history of a currency pair
 		#Will only pull 1000 rows at a time
 		from MtgoxClass import Mtgox
@@ -30,11 +30,14 @@ class Scraper:
 		dbname = config.get('mysql','dbname')
 		db=MySQLdb.connect(host=host,user=dbuser,passwd=dbpwd,db=dbname)
 
-		stmnt = 'select max(tid) from mtgoxUSD'
-		with db:
-				c = db.cursor()	
-				c.execute(stmnt)
-				maxtid = c.fetchone()
+		if tidoverride:
+			maxtid=[tidoverride]
+		else:
+			stmnt = 'select max(tid) from mtgoxUSD'
+			with db:
+					c = db.cursor()	
+					c.execute(stmnt)
+					maxtid = c.fetchone()
 
 		time_since = maxtid[0]   #time_now - 30 #time in seconds
 		#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
@@ -69,7 +72,15 @@ class Scraper:
 				#print item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']
 			data = [item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']]
 
-			if data[5] <= time_since:
+			#In case of TID OVERRIDE Check for existing rows in mySQL to prevent Duplicate Insert Errors
+			if tidoverride:
+				with db:
+					c = db.cursor()
+					c.execute('select tid from mtgoxUSD where tid = %s',data[5])
+					existingtid = c.fetchone()
+
+			#IF we have not specified a TIDoverride, then run the simple duplicate check instead of triggering extra mySQL calls
+			if tidoverride == None and data[5] <= time_since or tidoverride != None and existingtid!=None:         #data[5] <= time_since:
 				#prevent insertion of duplicates just in case Mtgox starts processing trades with duplicate TID's
 				print 'Duplicate TID Found - insert aborted ', data[5]
 			else:	
