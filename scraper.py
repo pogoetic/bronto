@@ -1,5 +1,5 @@
 from ScraperClass import Scraper
-import time, argparse
+import time, argparse, sys
 
 '''
 Pull in trade history of a currency pair, BTCUSD in this case
@@ -27,6 +27,9 @@ while ((end-start)/60/60) < 5: #run for 5 hours
 	while rows_added >= 1000:
 		#scrape the trades from MtGox and return the number of trades inserted
 		if args.tid:
+			if len(str(args.tid[0]))!=16:
+				print "Incorrect TID length - must be a UNIX Microtime of length 16"
+				sys.exit()
 			rows_added = scrape.Scrape_gox_trades(tidoverride=args.tid[0])  #tidoverride=1369319572499521
 		else: 
 			rows_added = scrape.Scrape_gox_trades()
