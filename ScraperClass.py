@@ -71,7 +71,7 @@ class Scraper:
 		for item in j['data']:
 				#print item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']
 			data = [item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']]
-
+			print data
 			#In case of TID OVERRIDE Check for existing rows in mySQL to prevent Duplicate Insert Errors
 			if tidoverride:
 				with db:
