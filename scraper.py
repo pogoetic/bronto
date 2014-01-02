@@ -30,7 +30,7 @@ while ((end-start)/60/60) < 5: #run for 5 hours
 			if len(str(args.tid[0]))!=16:
 				print "Incorrect TID length - must be a UNIX Microtime of length 16"
 				sys.exit()
-			rows_added = scrape.Scrape_gox_trades(tidoverride=args.tid[0])  #tidoverride=1369319572499521
+			rows_added = scrape.Scrape_gox_trades(tidoverride=args.tid[0])  #tidoverride=1369326824470988
 		else: 
 			rows_added = scrape.Scrape_gox_trades()
 		time.sleep(15) #give us a gap between API calls
