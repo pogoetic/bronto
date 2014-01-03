@@ -36,7 +36,6 @@ class Scraper:
 				c = db.cursor()	
 				c.execute(stmnt)
 				rowcount = c.fetchone()
-				print type(rowcount)
 
 		if tidoverride:
 			maxtid=[tidoverride]
@@ -50,6 +49,8 @@ class Scraper:
 					maxtid = c.fetchone()
 
 		time_since = maxtid[0]   #time in seconds
+		print maxtid
+		print type(time_since)
 		#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
 		time_since_gox = int(time_since) 
 		#print 'time since: ', str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(time_since)))
