@@ -41,6 +41,7 @@ class Scraper:
 			maxtid=[tidoverride]
 		elif rowcount == 0:
 			maxtid = [0]	
+			print 'rowcount is zero'
 		else:
 			stmnt = 'select max(tid) from mtgoxUSD'
 			with db:
