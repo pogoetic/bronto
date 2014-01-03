@@ -16,21 +16,25 @@ end = start
 
 scrape = Scraper() #initiate scraper object
 
+i=0
 #loop through updates every 15 sec for 5 hours
 while ((end-start)/60/60) < 5: #run for 5 hours
 
 	#end = time.mktime(time.gmtime())
 	end = start #this will force run indefinitely
-
 	#in case we received more than 1000 trades, loop through
 	rows_added = 1000
 	while rows_added >= 1000:
+		i+=1 #count number of loops
 		#scrape the trades from MtGox and return the number of trades inserted
-		if args.tid:
+		if args.tid && i=1:
 			if len(str(args.tid[0]))!=16:
 				print "Incorrect TID length - must be a UNIX Microtime of length 16"
 				sys.exit()
-			rows_added = scrape.Scrape_gox_trades(tidoverride=args.tid[0])  #tidoverride=1369326824470988
+			rows_added = scrape.Scrape_gox_trades(tidoverride=args.tid[0])  #tidoverride=1369326824470988		
+		elif args.tid && i>1:
+			print 'I have already run 1 tidoverride iteration'
+			#user max rowid to get "last row inserted" and go from there
 		else: 
 			rows_added = scrape.Scrape_gox_trades()
 		time.sleep(15) #give us a gap between API calls
