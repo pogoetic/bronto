@@ -30,8 +30,17 @@ class Scraper:
 		dbname = config.get('mysql','dbname')
 		db=MySQLdb.connect(host=host,user=dbuser,passwd=dbpwd,db=dbname)
 
+		#Check if mysql table is empty
+		stmnt = 'select count(*) from mtgoxUSD'
+		with db:
+				c = db.cursor()	
+				c.execute(stmnt)
+				rowcount = c.fetchone()
+
 		if tidoverride:
 			maxtid=[tidoverride]
+		elif rowcount == 0:
+			maxtid = 0	
 		else:
 			stmnt = 'select max(tid) from mtgoxUSD'
 			with db:
@@ -39,7 +48,7 @@ class Scraper:
 					c.execute(stmnt)
 					maxtid = c.fetchone()
 
-		time_since = maxtid[0]   #time_now - 30 #time in seconds
+		time_since = maxtid[0]   #time in seconds
 		#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
 		time_since_gox = int(time_since) 
 		#print 'time since: ', str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(time_since)))
@@ -71,7 +80,7 @@ class Scraper:
 		for item in j['data']:
 				#print item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']
 			data = [item['date'],item['price'],item['amount'],item['price_int'],item['amount_int'],item['tid'],item['price_currency'],item['item'],item['trade_type'],item['primary'],item['properties']]
-			print data
+
 			#In case of TID OVERRIDE Check for existing rows in mySQL to prevent Duplicate Insert Errors
 			if tidoverride:
 				with db:
