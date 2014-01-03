@@ -40,7 +40,7 @@ class Scraper:
 		if tidoverride:
 			maxtid=[tidoverride]
 		elif rowcount == 0:
-			maxtid = 0	
+			maxtid[0] = 0	
 		else:
 			stmnt = 'select max(tid) from mtgoxUSD'
 			with db:
