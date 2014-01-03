@@ -34,6 +34,7 @@ while ((end-start)/60/60) < 5: #run for 5 hours
 			rows_added = scrape.Scrape_gox_trades(tidoverride=args.tid[0])  #tidoverride=1369326824470988		
 		elif args.tid and i>1:
 			print 'I have already run 1 tidoverride iteration. The next one needs to cue off max(rowid) somehow. please write the code!'
+			sys.exit
 			#user max rowid to get "last row inserted" and go from there
 		else: 
 			rows_added = scrape.Scrape_gox_trades()
