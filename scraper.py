@@ -27,7 +27,7 @@ while ((end-start)/60/60) < 5: #run for 5 hours
 	while rows_added >= 1000:
 		i+=1 #count number of loops
 		#scrape the trades from MtGox and return the number of trades inserted
-		if args.tid && i=1:
+		if args.tid and i=1:
 			if len(str(args.tid[0]))!=16:
 				print "Incorrect TID length - must be a UNIX Microtime of length 16"
 				sys.exit()
