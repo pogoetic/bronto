@@ -37,12 +37,7 @@ class Scraper:
 			with db:
 					c = db.cursor()	
 					c.execute(stmnt)
-					if c.fetchone(): #check if mysql table is empty
-						maxtid = c.fetchone()
-					else: 
-						print 'rowcount is zero - starting from scratch!'
-						maxtid[0] = 0
-		print maxtid[0]
+					maxtid = c.fetchone()
 
 		time_since = maxtid[0]   #time in seconds
 		#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
