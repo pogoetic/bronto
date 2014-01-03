@@ -41,9 +41,9 @@ class Scraper:
 						maxtid = c.fetchone()
 					else: 
 						print 'rowcount is zero - starting from scratch!'
-						maxtid = [0]
+						maxtid[0] = 0
 		print maxtid[0]
-		
+
 		time_since = maxtid[0]   #time in seconds
 		#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
 		time_since_gox = int(time_since) 
