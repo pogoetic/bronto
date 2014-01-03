@@ -30,27 +30,21 @@ class Scraper:
 		dbname = config.get('mysql','dbname')
 		db=MySQLdb.connect(host=host,user=dbuser,passwd=dbpwd,db=dbname)
 
-		#Check if mysql table is empty
-		stmnt = 'select count(*) from mtgoxUSD'
-		with db:
-				c = db.cursor()	
-				c.execute(stmnt)
-				rowcount = c.fetchone()
-				print rowcount
-
 		if tidoverride:
 			maxtid=[tidoverride]
-		elif rowcount == 0:
-			maxtid = [0]	
-			print 'rowcount is zero'
 		else:
 			stmnt = 'select max(tid) from mtgoxUSD'
 			with db:
 					c = db.cursor()	
 					c.execute(stmnt)
-					maxtid = c.fetchone()
+					if c.fetchone(): #check if mysql table is empty
+						maxtid = c.fetchone()
+					else: 
+						print 'rowcount is zero - starting from scratch!'
+						maxtid = [0]
 
 		time_since = maxtid[0]   #time in seconds
+		print time_since
 		#gox format is microtime which they call a TID, must be an int for the URLENCODE to work properly
 		time_since_gox = int(time_since) 
 		#print 'time since: ', str(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime(time_since)))
