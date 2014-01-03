@@ -80,7 +80,7 @@ class Scraper:
 					existingtid = c.fetchone()
 
 			#IF we have not specified a TIDoverride, then run the simple duplicate check instead of triggering extra mySQL calls
-			if tidoverride == None and data[5] <= time_since or tidoverride != None and existingtid!=None:         #data[5] <= time_since:
+			if (tidoverride == None and data[5] <= time_since) or (tidoverride != None and existingtid!=None):         #data[5] <= time_since:
 				#prevent insertion of duplicates just in case Mtgox starts processing trades with duplicate TID's
 				print 'Duplicate TID Found - insert aborted ', data[5]
 			else:	
