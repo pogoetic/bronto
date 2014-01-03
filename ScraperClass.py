@@ -36,6 +36,7 @@ class Scraper:
 				c = db.cursor()	
 				c.execute(stmnt)
 				rowcount = c.fetchone()
+				print type(rowcount)
 
 		if tidoverride:
 			maxtid=[tidoverride]
