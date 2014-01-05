@@ -11,17 +11,17 @@ parser.add_argument('--tid', type=int, nargs='+',
                    help='a starting TID from which to scrape mtgox trades in UNIX Microtime')
 args = parser.parse_args()
 
-start = time.mktime(time.gmtime())  #MTGOX server is on UTC
-end = start
+#start = time.mktime(time.gmtime())  #MTGOX server is on UTC
+#end = start
 
 scrape = Scraper() #initiate scraper object
 
 i=0
 #loop through updates every 15 sec for 5 hours
-while ((end-start)/60/60) < 5: #run for 5 hours
+while 1==1:  #((end-start)/60/60) < 5: #run for 5 hours
 
 	#end = time.mktime(time.gmtime())
-	end = start #this will force run indefinitely
+	#end = start #this will force run indefinitely
 	#in case we received more than 1000 trades, loop through
 	rows_added = 1000
 	while rows_added >= 1000:
